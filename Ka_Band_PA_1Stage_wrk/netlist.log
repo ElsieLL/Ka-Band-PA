@@ -1,0 +1,117 @@
+; Top Design: "Ka_Band_PA_1Stage_lib:3CS_Cal_Sweep_Pin:schematic"
+; Netlisted using Hierarchy Policy: "Standard"
+
+Options ResourceUsage=yes UseNutmegFormat=no EnableOptim=no TopDesignName="Ka_Band_PA_1Stage_lib:3CS_Cal_Sweep_Pin:schematic" DcopOutputNodeVoltages=yes DcopOutputPinCurrents=yes DcopOutputAllSweepPoints=no DcopOutputDcopType=0
+; Library Name: Ka_Band_PA_1Stage_lib
+; Cell Name: 3CS_Cal_Symbol
+; View Name: schematic
+define "3CS_Cal_Symbol" ( GP  GN  DP  DN  GND  VDD ) 
+parameters  Ld=100.7  Cn_Extra=10  Cd_Extra=10 
+zl_Doherty_Transmitter_3CS_noRNW_Cal_calibre:X1  N__3 N__12 D_IND N__1 GND N__14 VDD 
+
+SRF_Ld=192G
+Omega=2*pi*28G
+L:L7  DP N__12 L=5.7 pH Noise=yes  
+Short:L8  GP N__14 Mode=0 SaveCurrent=no
+Short:L9  GN N__1 Mode=0 SaveCurrent=no
+L:L10  DN N__3 L=5.7 pH Noise=yes  
+#uselib "ckt" , "SnP"
+SnP:SnP1  GND D_IND NumPorts=2 File="/home/zliudq/tsmcN40/EMX_work/zl_Doherty_Transmitter_A_CS_Ld_101_withGR_tb.work/A_CS_Ld_101_withGR_tb.s2p" Type="touchstone" InterpMode="linear" InterpDom="" ExtrapMode="constant" Temp=27.0 CheckPassivity=0 
+#uselib "ckt" , "SnP"
+SnP:SnP2  GND D_IND NumPorts=2 File="/home/zliudq/tsmcN40/EMX_work/zl_Doherty_Transmitter_A_CS_Ld_101_withGR_tb.work/A_CS_Ld_101_withGR_tb.s2p" Type="touchstone" InterpMode="linear" InterpDom="" ExtrapMode="constant" Temp=27.0 CheckPassivity=0 
+C:C1  DP N__1 C=Cn_Extra fF 
+C:C2  DN N__14 C=Cn_Extra fF 
+C:C4  D2_IND DN C=Cd_Extra fF 
+C:C5  D2_IND DP C=Cd_Extra fF 
+end "3CS_Cal_Symbol"
+
+L:L4  VDD vd1n L=1.0 mH Noise=yes  
+L:L3  vd1p VDD L=1.0 mH Noise=yes  
+L:L1  N__21 VG1 L=1.0 mH Noise=yes  
+L:L2  VG1 N__23 L=1.0 mH Noise=yes  
+C:C4  N__3 vd1p C=1.0 uF 
+C:C3  N__4 vd1n C=1.0 uF 
+HB:HB2 MaxOrder=4 Freq[1]=RFfreq GHz Order[1]=5 StatusLevel=2 Restart=no OutputBudgetIV=no HBSS_WSP=0 SweepVar="Pavs_dBm" SweepPlan="HB2_stim" OutputPlan="HB2_Output" ConvMode=1 ArcLevelMaxStep=0.0 MaxStepRatio=100 MaxShrinkage=1.0e-5 ArcMaxStep=0.0 \
+UseKrylov=1 KrylovMaxIters=150 KrylovPrec=1 \
+
+
+SweepPlan: HB2_stim Start=-25 Stop=5 Step=1 
+
+OutputPlan:HB2_Output \
+      Type="Output" \
+      UseNodeNestLevel=yes \
+      NodeNestLevel=2 \
+      UseEquationNestLevel=yes \
+      EquationNestLevel=2 \
+      UseSavedEquationNestLevel=yes \
+      SavedEquationNestLevel=2 \
+      UseDeviceCurrentNestLevel=no \
+      DeviceCurrentNestLevel=0 \
+      DeviceCurrentDeviceType="All" \
+      DeviceCurrentSymSyntax=yes \
+      UseCurrentNestLevel=yes \
+      CurrentNestLevel=999 \
+      UseDeviceVoltageNestLevel=no \
+      DeviceVoltageNestLevel=0 \
+      DeviceVoltageDeviceType="All"
+
+Tran:HB2_tran HB_Sol=1 SteadyState=1 StatusLevel=3 \
+Freq[1]=RFfreq GHz Order[1]=5 
+
+Component:tahb_HB2 Module="ATAHB" Type="ModelExtractor" \ 
+ Tran_Analysis="HB2_tran" HB_Analysis="HB2" 
+
+
+Options:Options1 Tnom=25 TopologyCheck=yes ForceS_Params=yes V_RelTol=1e-3 V_AbsTol=1e-4 V  \
+I_RelTol=1e-3 I_AbsTol=1e-8 A GiveAllWarnings=yes MaxWarnings=10 ForceM_Params=yes  \
+InitialGuessAnnotation=0 TopologyCheckMessages=no doDeltaAC=no ReduceSPortRatio=0.5 WarnSOA=yes  \
+MaxWarnSOA=5 Census=no DuplicateParam="ignore" DuplicateFunc="ignore" DuplicateModel="ignore"  \
+DuplicateSubckt="ignore" DuplicateInstance="ignore" MinNodalR=1e-2 Ohm LargeCapThreshold=1e-3 F EnableAssertChecks=no EnableSpareRemoval=no 
+
+aele Gain_transducer=Pdel_dBm-Pavs_dBm;Spectrum_in_W=0.5*real(V_In*conj(I_In.i));Pin_W=Spectrum_in_W[1];Pin_Watts=Pin_W;Pin_dBm=if (Pin_Watts<0) then -200 else 10*log(Pin_Watts) +30;Gain_operating=Pdel_dBm-Pin_dBm;
+aele Total_input_pwr=Pdc+sum(Spectrum_in_W);Total_output_pwr=sum(Spectrum_W);Thermal_diss=Total_input_pwr-Total_output_pwr;
+aele Pdel_W=Spectrum_W[1];Pdel_Watts=Pdel_W;Pdel_dBm=10*log(Pdel_Watts) +30;
+aele Spectrum_W=0.5*real(Vload*conj(Iload.i));Spectrum=10*log(Spectrum_W +1e-20) +30;Vout=Vload;Iout=Iload.i;Vin=V_In;Iin=I_In.i;
+aele VG=Vlow;VD=Vhigh;Zs=Z_s_fund;Zl=Z_l_fund;P_avs_dBm=Pavs_dBm;
+aele Pdc=mag(Is_1.i[0] * Vs_1[0]) +mag(Is_2.i[0]*Vs_2[0])+mag(Is_3.i[0]*Vs_3[0]);Pdc_dBm=10*log(Pdc +1e-20) +30;Pavs_Watts=10**((Pavs_dBm-30)/10);PAE=100*(Pdel_W -Pin_W)/Pdc;DE=100*Pdel_W/Pdc;
+aele Z_In=V_In[::,1]/I_In.i[::,1];Z_load=Vload[::,1]/Iload.i[::,1];Z_d1=vd1[::,1]/I_d1.i[::,1];
+aele vd1=vd1p-vd1n;Spectrum_d1_W=0.5*real(vd1*conj(I_d1.i));Spectrum_d1_dBm=10*log(Spectrum_d1_W +1e-20) +30;Pd1_W=Spectrum_d1_W[1];Pd1_dBm=if (Pd1_W<0) then -200 else 10*log(Pd1_W) +30;Gain_operating_1s=Pd1_dBm-Pin_dBm;
+"3CS_Cal_Symbol":X2  N__21 N__23 N__5 vd1n 0 VDD Ld=Ld Cn_Extra=0 Cd_Extra=10 
+
+RFfreq=28
+Z0=50
+SrcTuner=(Z_s_fund-Z0)/(Z_s_fund+Z0)
+LoadTuner=(Z_l_fund-Z0)/(Z_l_fund+Z0)
+V_Source:SRC3  N__20 0 Type="V_1Tone" V[1]=dbmtov(Pavs_dBm,Z_s_fund) V Freq[1]=RFfreq GHz    Vac=polar(1,0) V SaveCurrent=1 
+S_Port:S1  N__13 N__20 S[1,1]=SrcTuner Z[1]=Z0 
+S_Port:S2  Vload 0 S[1,1]=LoadTuner Z[1]=Z0 
+V_Source:SRC1  Vs_2 0 Type="V_DC" Vdc=0 SaveCurrent=1 
+V_Source:SRC4  Vs_3 0 Type="V_DC" Vdc=Vhigh SaveCurrent=1 
+V_Source:SRC2  Vs_1 0 Type="V_DC" Vdc=Vlow SaveCurrent=1 
+Short:Is_3  Vs_3 VDD Mode=0 SaveCurrent=yes 
+
+Vhigh=0.8 V
+Vlow=0.32 V tune{ 0.1 V to 0.9 V by 0.02 V }
+Z_s_fund=3.3+j*106.2
+Z_l_fund=15.5+j*40.5
+Pavs_dBm=-9
+Short:I_In  N__13 V_In Mode=0 SaveCurrent=yes 
+Short:Is_1  Vs_1 VG1 Mode=0 SaveCurrent=yes 
+Short:Is_2  Vs_2 VG2 Mode=0 SaveCurrent=yes 
+Short:Iload  N__0 Vload Mode=0 SaveCurrent=yes 
+Short:I_d1  N__5 vd1p Mode=0 SaveCurrent=yes 
+#uselib "ckt" , "tf"
+tf:TF3  V_In inp N__19 0 T=1 
+#uselib "ckt" , "tf"
+tf:TF4  N__19 0 0 inn T=1 
+#uselib "ckt" , "tf"
+tf:TF5  N__2 0 0 N__4 T=1 
+#uselib "ckt" , "tf"
+tf:TF6  N__0 N__3 N__2 0 T=1 
+
+Ld=100.7 tune{ 50 to 375 by 25 }
+C:C1  inp N__21 C=1.0 uF 
+simulator lang=spectre
+include "/home/zliudq/ADS/zl_BeamForming_wrk/.DL/zl_Doherty_Transmitter_8Cas_noRNW_EMX_v2_schematic_nport_models.scs"
+simulator lang=ads
+C:C2  inn N__23 C=1.0 uF 

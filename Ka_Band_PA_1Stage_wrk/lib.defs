@@ -1,0 +1,4 @@
+INCLUDE $HPEESOF_DIR/oalibs/analog_rf.defs
+INCLUDE $HPEESOF_DIR/oalibs/dsp.defs
+DEFINE Ka_Band_PA_1Stage_lib Ka_Band_PA_1Stage_lib
+ASSIGN Ka_Band_PA_1Stage_lib libMode shared
