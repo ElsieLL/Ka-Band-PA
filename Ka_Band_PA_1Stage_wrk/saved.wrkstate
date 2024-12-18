@@ -1,8 +1,0 @@
-<!DOCTYPE SaveWorkspaceState>
-<SaveWorkspaceState>
-    <Windows>
-        <Schematic cell="3CS_Cal_Symbol" height="802" y1="295" x1="836" width="1084" geom="1,0,0,836,332,1084,802,1920,1200" view="schematic" lib="Ka_Band_PA_1Stage_lib"/>
-        <Schematic cell="3CS_Cal_Sweep_Pin" height="802" y1="315" x1="787" width="1084" geom="1,0,0,787,352,1084,802,1920,1200" view="schematic" lib="Ka_Band_PA_1Stage_lib"/>
-    </Windows>
-    <MainWindowTab tab="1"/>
-</SaveWorkspaceState>
