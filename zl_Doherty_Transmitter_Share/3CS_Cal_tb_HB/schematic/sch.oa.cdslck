@@ -1,0 +1,16 @@
+#
+# Edit Lock-Stake file. CAUTION: Please do not change.
+#
+# Information about current Edit Lock Owner.
+#
+LockStakeVersion               1.1
+LoginName                      zliudq
+HostName                       eex109.ee.ust.hk
+ProcessIdentifier              22295
+ProcessCreationTime_UTC        1731477492
+ProcessCreationTime_Readable   Wed Nov 13 13:58:12 2024 HKT
+AppIdentifier                  OA File System Design Manager
+OSType                         unix
+ReasonForPlacingEditLock       OpenAccess edit lock
+FilePathUsedToEditLock         /home/zliudq/tsmcN40/zl_Doherty_Transmitter_Share/3CS_Cal_tb_HB/schematic/sch.oa.cdslck
+TimeEditLocked                 Wed Dec 18 17:31:53 2024 HKT
